@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="./index.css" /> -->
+    <style>
+      /* Toast styles */
+      .toast {
+        display: none;
+        background-color: #f44336;
+        color: white;
+        padding: 5px 10px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+      }
+      /* Form container styles */
+      .container {
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .fn {
+        margin-bottom: 15px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="#" class="container" id="myForm">
+      <!-- <! -- FirstName div -->
+
+      <div class="fn">
+        <p id="fnToast" class="toast"></p>
+        <input type="text" placeholder="Firstname" id="firstName" required />
+      </div>
+
+      <!-- //MiddleName div -->
+      <div class="fn">
+        <p id="mnToast" class="toast"></p>
+        <input type="text" placeholder="Middlename" id="middleName" required />
+      </div>
+
+      <!-- //LastName div -->
+      <div class="fn">
+        <p id="lnToast" class="toast"></p>
+        <input type="text" placeholder="Lastname" id="surName" required />
+      </div>
+
+      <!-- //email div -->
+      <div class="fn">
+        <p id="emailToast" class="toast"></p>
+        <input
+          type="email"
+          name="user_email"
+          id="email"
+          placeholder=" Email"
+          required
+        />
+      </div>
+
+      <!-- password div -->
+      <div class="fn">
+        <p id="passToast" class="toast"></p>
+        <input
+          type="password"
+          name="user_password"
+          id="createPassword"
+          placeholder=" Create Password"
+          required
+        />
+      </div>
+
+      <!-- confirm pass div -->
+      <div class="fn">
+        <p id="confirmPassToast" class="toast"></p>
+        <input
+          type="password"
+          name="confirm_password"
+          id="confirmPassword"
+          placeholder=" Confirm Password"
+          required
+        />
+      </div>
+
+      <!-- dob div -->
+      <div class="fn">
+        <p id="dobToast" class="toast"></p>
+        <input type="date" name="DOB" id="DOB" required />
+      </div>
+
+      <!-- github link div -->
+      <div class="fn"></div>
+      <p id="githubToast" class="toast"></p>
+      <input
+        type="text"
+        name="github_link"
+        id="gitlink"
+        placeholder="GitHub Link"
+        required
+      />
+
+      <!-- linkedin link div -->
+      <div class="fn"></div>
+      <p id="linkedinToast" class="toast"></p>
+      <input
+        type="text"
+        name="linkedinLink"
+        id="linkedin"
+        placeholder="Linkedin Link"
+        required
+      />
+
+      <!-- Submit btn -->
+      <input type="submit" value="Submit Button" id="btn" />
+    </form>
+
+    <script>
+      const form = document.getElementById("myForm");
+
+      //reset all existing toast messages
+      const toastElements = document.querySelectorAll(".toast");
+      toastElements.forEach((toast) => {
+        toast.style.display = "none";
+      });
+
+      //event Listner
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Validation for -FN
+        const firstName = document.getElementById("firstName").value;
+        console.log(firstName);
+        if (!isCharacterOnly(firstName)) {
+          console.log("Inside");
+          showToast("Please enter valid char-FN", "fnToast");
+          // return;
+        }
+        //Validation for -MN
+        const middleName = document.getElementById("middleName").value;
+        console.log(middleName);
+        if (!isCharacterOnly(middleName)) {
+          showToast("Please enter valid char-MN", "mnToast");
+          // return;
+        }
+
+        //Validation for SN
+        const surName = document.getElementById("surName").value;
+        console.log(surName);
+        if (!isCharacterOnly(surName)) {
+          showToast("Please enter valid char-LN", "lnToast");
+          // return;
+        }
+
+        //Validation for -email
+        const email = document.getElementById("email").value;
+        console.log(email);
+        if (!validateEmail(email)) {
+          showToast("Please enter valid email", "emailToast");
+          // return;
+        }
+
+        //Validation for -  Pass
+        const Pass = document.getElementById("createPassword").value;
+        console.log(Pass);
+
+        if (!passwordValidation(Pass)) {
+          showToast("Please enter valid password", "passToast");
+          // return;
+        }
+
+        //Validation for - Confirm Pass
+        const ConfirmPass = document.getElementById("confirmPassword").value;
+        console.log(ConfirmPass);
+        if (!toastConfirmPass(Pass, ConfirmPass)) {
+          showToast("Please enter valid cPassword", "confirmPassToast");
+          // return;
+        }
+
+        //Validation for - DOB
+        const dob = document.getElementById("DOB").value;
+        console.log(dob);
+        if (!validateDate(dob)) {
+          showToast("Please enter valid DOB", "dobToast");
+          // return;
+        }
+
+        //Validation for - GL
+        let githubLink = document.getElementById("gitlink").value;
+        console.log(githubLink);
+        if (!validateURL(githubLink)) {
+          showToast("Please enter valid GitHub Link", "githubToast");
+          // return;
+        }
+
+        //Validation for - LL
+        let linkedInLink = document.getElementById("linkedin").value;
+        console.log(linkedInLink);
+        if (!validateURL(linkedInLink)) {
+          showToast("Please enter valid LinkedIn Link", "linkedinToast");
+          // return;
+        }
+      });
+
+      //Validation Function
+      function showToast(message, toastId) {
+        const toast = document.getElementById(toastId);
+        toast.textContent = message;
+        toast.style.display = "block";
+      }
+
+      // Validation Function - Email
+      function validateEmail(email) {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(email);
+      }
+
+      //Validation Function - Pass
+      function passwordValidation(password) {
+        const minLength = 8;
+        const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(password);
+        const hasNumber = /\d/.test(password);
+
+        return password.length >= minLength && hasSpecialChar && hasNumber;
+      }
+
+      //Validation Function - Confirm Pass
+      function toastConfirmPass(password, confirmPassword) {
+        return password === confirmPassword;
+      }
+
+      // Validation Function - DOB
+      function validateDate(date) {
+        const currentDate = new Date();
+        const inputDate = new Date(date); // Parse input date string
+        return inputDate < currentDate;
+      }
+
+      // Validation Function - GL & LL
+      function validateURL(url) {
+        const pattern = /^(https?:\/\/)?(www\.)?[\w.-]+\.[a-zA-Z]{2,}(\/\w*)*$/;
+        return pattern.test(url);
+      }
+
+      // Validation Function- FN , MN ,LN
+      function isCharacterOnly(input) {
+        const pattern = /^[a-zA-Z]+$/;
+        return pattern.test(input);
+      }
+    </script>
+  </body>
+</html>
